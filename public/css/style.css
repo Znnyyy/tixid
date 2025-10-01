@@ -1,0 +1,45 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Lexend Deca;
+}
+
+.card-text {
+    font-weight: bold;
+    text-align: center;
+    padding: 0 !important;
+    border-radius: 0 0 9px  9px;
+    background-color: rgb(6, 6, 51);
+}
+
+.card-text a {
+    text-decoration: none;
+    color: rgb(163, 133, 1);
+    transition: 0.3s;
+}
+
+.card-text a:hover {
+    color: rgb(252, 255, 213);
+}
+
+.login a {
+    text-decoration: none;
+    color: rgb(235, 178, 9);
+}
+
+.sign-up a {
+    text-decoration: none;
+    color: white;
+}
+
+.btn-sign a {
+    text-decoration: none;
+    color: white;
+}
+
+.poster {
+    width: 150px;
+    height: auto;
+    
+}

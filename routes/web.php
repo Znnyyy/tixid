@@ -1,0 +1,104 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\userController;
+use App\Http\Controllers\CinemaController;
+use App\Http\Controllers\MovieController;
+use App\Http\Controllers\PromoController;
+
+Route::get('/', [MovieController::class, 'home'])->name('home');
+
+// Route::get('/schedules/detail', function () {
+//     return view('schedule.detail');
+// })->name('schedules.detail');
+
+Route::get('/movies/active', [MovieController::class, 'homeMovies'])->name('home.movies.all');
+
+Route::get('/schedule/{id}', [MovieController::class, 'show'])->name('movies.show');
+
+Route::get('/auth/logout', [userController::class, 'logout'])->name('logout');
+
+// unntuk halaman yang hanya bisa diakses admin
+Route::middleware('isAdmin')->prefix('/admin')->name('admin.')->group(function () {
+    // tambahkan route yang hanya bisa diakses admin di sini
+    // route untuk admin
+    Route::get('/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('dashboard');
+
+    // bioskop
+    Route::prefix('/cinemas')->name('cinemas.')->group(function () {
+        Route::get('/index', [CinemaController::class, 'index'])->name('index');
+        Route::get('/create', [CinemaController::class, 'create'])->name('create');
+        Route::post('/store', [CinemaController::class, 'store'])->name('store');
+        // parameter placeholder -> {id} : mencari data spesifik
+        Route::get('/edit/{id}', [CinemaController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [CinemaController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [CinemaController::class, 'destroy'])->name('delete');
+        ('update');
+        Route::get('/export', [CinemaController::class, 'export'])->name('export');
+    });
+
+    // staff
+    Route::prefix('/staffs')->name('staffs.')->group(function () {
+        Route::get('/index', [UserController::class, 'index'])->name('index');
+        Route::get('/create', [UserController::class, 'create'])->name('create');
+        Route::post('/store', [UserController::class, 'store'])->name('store');
+        // parameter placeholder -> {id} : mencari data spesifik
+        Route::get('/edit/{id}', [UserController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [UserController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('delete');
+        ('update');
+        Route::get('/export', [UserController::class, 'export'])->name('export');
+    });
+
+    // film
+    Route::prefix('/movies')->name('movies.')->group(function () {
+        Route::get('/index', [MovieController::class, 'index'])->name('index');
+        Route::get('/create', [MovieController::class, 'create'])->name('create');
+        Route::post('/store', [MovieController::class, 'store'])->name('store');
+        // parameter placeholder -> {id} : mencari data spesifik
+        Route::get('/edit/{id}', [MovieController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [MovieController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [MovieController::class, 'destroy'])->name('delete');
+        Route::put('/deactivate/{id}', [MovieController::class, 'deactivate'])->name('deactivate');
+        Route::put('/activate/{id}', [MovieController::class, 'activate'])->name('activate');
+        ('update');
+        Route::get('/export', [MovieController::class, 'export'])->name('export');
+    });
+});
+
+Route::middleware('isGuest')->group(function () {
+    // hanya user yang belum login (guest) bisa akses signup & login
+    Route::get('/auth/login', function () {
+        return view('auth.login');
+    })->name('login');
+
+    Route::get('/auth/signup', function () {
+        return view('auth.signup');
+    })->name('signup');
+
+    Route::post('/auth/signup', [userController::class, 'register'])->name('signup.send_data');
+    Route::post('/auth/login', [userController::class, 'authentication'])->name('auth');
+});
+
+Route::middleware('isStaff')->prefix('/staff')->name('staff.')->group(function () {
+    // tambahkan route yang hanya bisa diakses staff di sini
+    // route untuk staff
+    Route::get('/dashboard', function () {
+        return view('staff.dashboard');
+    })->name('dashboard');
+
+    // promo
+    Route::prefix('/promos')->name('promos.')->group(function () {
+        Route::get('/index', [PromoController::class, 'index'])->name('index');
+        Route::get('/create', [PromoController::class, 'create'])->name('create');
+        Route::post('/store', [PromoController::class, 'store'])->name('store');
+        // parameter placeholder -> {id} : mencari data spesifik
+        Route::get('/edit/{id}', [PromoController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [PromoController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [PromoController::class, 'destroy'])->name('delete');
+        ('update');
+        Route::get('/export', [PromoController::class, 'export'])->name('export');
+    });
+});
