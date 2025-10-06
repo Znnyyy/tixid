@@ -84,30 +84,11 @@
           </li>
           @elseif (Auth::check() && Auth::user()->role == 'staff')
           <li class="nav-item">
-            <a class="nav-link" href="#">Dashboard</a>
+            <a class="nav-link" href="#">Jadwal Tiket</a>
           </li>
 
-          <li class="nav-item dropdown">
-            <a
-              data-mdb-dropdown-init
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="navbarDropdownMenuLink"
-              role="button"
-              aria-expanded="false">
-              Data Master
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <li>
-                <a class="dropdown-item" href="{{ route('staff.promos.index') }}">Data Promo</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">Data Film</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">Data Staff</a>
-              </li>
-            </ul>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('staff.promos.index') }}">Promo</a>
           </li>
           @else
           <li class="nav-item">

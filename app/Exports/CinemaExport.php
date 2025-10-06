@@ -26,4 +26,13 @@ class CinemaExport implements FromCollection, WithHeadings, WithMapping
             'Lokasi'
         ];
     }
+
+    public function map($cinema): array
+    {
+        return [
+            ++$this->key,
+            $cinema->name,
+            $cinema->location
+        ];
+    }
 }
