@@ -3,9 +3,7 @@
 @section('content')
 <div class="container mt-5">
     <div class="d-flex justify-content-end">
-        <a href="{{ route('admin.staffs.export') }}" class="btn btn-info me-2">Export Data</a>
-        <a href="{{ route('admin.staffs.trash') }}" class="btn btn-secondary me-2">Recycle Bin</a>
-        <a href="{{ route('admin.staffs.create') }}" class="btn btn-success">Tambah Data</a>
+        <a href="{{ route('admin.staffs.index') }}" class="btn btn-success">Kembali</a>
     </div>
     <h5 class="mt-3">Data User</h5>
     @if (Session::get('success'))
@@ -19,7 +17,7 @@
             <th>Role</th>
             <th>Aksi</th>
         </tr>
-        @foreach ($staffs as $index => $item)
+        @foreach ($staffTrash as $index => $item)
         <tr>
             <th>{{ $index+1 }}</th>
             <!-- name, location dari fillable model Cinema -->
@@ -36,12 +34,16 @@
             </th>
             <th>
                 <div class="d-flex">
-                    <a href="{{ route('admin.staffs.edit', ['id' => $item['id']]) }}" class="btn btn-secondary me-2">Edit</a>
-                    <form action="{{ route('admin.staffs.delete', ['id' => $item['id']]) }}" method="POST">
+                    <form action="{{ route('admin.staffs.restore', ['id' => $item['id']]) }}" method="POST">
                         @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger me-2">Hapus</button>
-                    </form>
+                        @method('PATCH')
+                        <button type="submit" class="btn btn-success me-2">pulihkan</button>
+                        </form>
+                        <form action="{{ route('admin.staffs.delete_permanent', ['id' => $item['id']]) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger me-2">Hapus</button>
+                        </form>
                 </div>
             </th>
         </tr>

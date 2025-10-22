@@ -5,6 +5,7 @@ use App\Http\Controllers\userController;
 use App\Http\Controllers\CinemaController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\PromoController;
+use App\Http\Controllers\ScheduleController;
 
 Route::get('/', [MovieController::class, 'home'])->name('home');
 
@@ -14,7 +15,7 @@ Route::get('/', [MovieController::class, 'home'])->name('home');
 
 Route::get('/movies/active', [MovieController::class, 'homeMovies'])->name('home.movies.all');
 
-Route::get('/schedule/{id}', [MovieController::class, 'show'])->name('movies.show');
+Route::get('/schedule/detail/{movie_id}', [MovieController::class, 'movieSchedule'])->name('schedules.detail');
 
 Route::get('/auth/logout', [userController::class, 'logout'])->name('logout');
 
@@ -35,7 +36,9 @@ Route::middleware('isAdmin')->prefix('/admin')->name('admin.')->group(function (
         Route::get('/edit/{id}', [CinemaController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [CinemaController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [CinemaController::class, 'destroy'])->name('delete');
-        ('update');
+        Route::get('/trash', [CinemaController::class, 'trash'])->name('trash');
+        Route::patch('/restore/{id}', [CinemaController::class, 'restore'])->name('restore');
+        Route::delete('/delete-permanent/{id}', [CinemaController::class, 'deletePermanent'])->name('delete_permanent');
         Route::get('/export', [CinemaController::class, 'export'])->name('export');
     });
 
@@ -48,7 +51,9 @@ Route::middleware('isAdmin')->prefix('/admin')->name('admin.')->group(function (
         Route::get('/edit/{id}', [UserController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [UserController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('delete');
-        ('update');
+        Route::get('/trash', [UserController::class, 'trash'])->name('trash');
+        Route::patch('/restore/{id}', [UserController::class, 'restore'])->name('restore');
+        Route::delete('/delete-permanent/{id}', [UserController::class, 'deletePermanent'])->name('delete_permanent');
         Route::get('/export', [UserController::class, 'export'])->name('export');
     });
 
@@ -61,9 +66,11 @@ Route::middleware('isAdmin')->prefix('/admin')->name('admin.')->group(function (
         Route::get('/edit/{id}', [MovieController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [MovieController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [MovieController::class, 'destroy'])->name('delete');
+        Route::get('/trash', [MovieController::class, 'trash'])->name('trash');
         Route::put('/deactivate/{id}', [MovieController::class, 'deactivate'])->name('deactivate');
         Route::put('/activate/{id}', [MovieController::class, 'activate'])->name('activate');
-        ('update');
+        Route::patch('/restore/{id}', [MovieController::class, 'restore'])->name('restore');
+        Route::delete('/delete-permanent/{id}', [MovieController::class, 'deletePermanent'])->name('delete_permanent');
         Route::get('/export', [MovieController::class, 'export'])->name('export');
     });
 });
@@ -98,7 +105,22 @@ Route::middleware('isStaff')->prefix('/staff')->name('staff.')->group(function (
         Route::get('/edit/{id}', [PromoController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [PromoController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [PromoController::class, 'destroy'])->name('delete');
-        ('update');
+        Route::get('/trash', [PromoController::class, 'trash'])->name('trash');
+        Route::patch('/restore/{id}', [PromoController::class, 'restore'])->name('restore');
+        Route::delete('/delete-permanent/{id}', [PromoController::class, 'deletePermanent'])->name('delete_permanent');
         Route::get('/export', [PromoController::class, 'export'])->name('export');
+    });
+
+    // jadwal tayang 
+    Route::prefix('/schedules')->name('schedules.')->group(function () {
+        Route::get('/', [ScheduleController::class, 'index'])->name('index');
+        Route::post('/store', [ScheduleController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [ScheduleController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [ScheduleController::class, 'update'])->name('update');
+        Route::delete('/delete/{id}', [ScheduleController::class, 'destroy'])->name('delete');
+        Route::get('/trash', [ScheduleController::class, 'trash'])->name('trash');
+        Route::patch('/restore/{id}', [ScheduleController::class, 'restore'])->name('restore');
+        Route::delete('/delete-permanent/{id}', [ScheduleController::class, 'deletePermanent'])->name('delete_permanent');
+        Route::get('/export', [ScheduleController::class, 'export'])->name('export');
     });
 });

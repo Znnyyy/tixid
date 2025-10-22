@@ -1,15 +1,19 @@
 @extends('templates.app')
 
 @section('content')
-@if (Session::get('success'))
-<div class="alert alert-success">{{ Session::get('success') }}</div>
-@endif
 <div class="container my-5">
     <div class="d-flex justify-content-end">
         <a href="{{ route('admin.movies.export') }}" class="btn btn-info me-2">Export Data</a>
+        <a href="{{ route('admin.movies.trash') }}" class="btn btn-secondary me-2">Recycle Bin</a>
         <a href="{{ route('admin.movies.create') }}" class="btn btn-success">Tambah Data</a>
     </div>
     <h5 class="mb-3">Data Film</h5>
+    @if (Session::get('success'))
+    <div class="alert alert-success">{{ Session::get('success') }}</div>
+    @endif
+    @if (Session::get('error'))
+    <div class="alert alert-danger">{{ Session::get('error') }}</div>
+    @endif
     <table class="table table-bordered">
         <tr>
             <th>No.</th>
@@ -33,7 +37,7 @@
             <th>
                 <div class="d-flex">
                     <button type="button" class="btn btn-secondary me-2" onclick="showModal({{ $item }})">Detail</button>
-                    <a href="{{ route('admin.movies.edit', ['id' => $item['id']]) }}" class="btn btn-primary me-2">Edit</a>
+                    <a href="{{ route('admin.movies.edit', $item['id']) }}" class="btn btn-primary me-2">Edit</a>
                     <form action="{{ route('admin.movies.delete', ['id' => $item['id']]) }}" method="POST">
                         @csrf
                         @method('DELETE')

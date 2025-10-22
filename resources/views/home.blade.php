@@ -124,7 +124,7 @@
         style="height: 420px; object-fit: cover;" />
         <div class="card-body bg-primary text-warning" style="padding: 0 !important; text-align: center;">
             <p class="card-text">
-                <a href="{{ route('movies.show', $item->id) }}">BELI TIKET</a>
+                <a href="{{ route('schedules.detail', $item['id']) }}">BELI TIKET</a>
             </p>
         </div>
     </div>

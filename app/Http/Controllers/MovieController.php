@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\MovieExport;
+use App\Models\Schedule;
 
 class MovieController extends Controller
 {
@@ -33,9 +34,18 @@ class MovieController extends Controller
         return view('home', compact('movies'));
     }
 
-    public function homeMovies()
+    public function homeMovies(Request $request)
     {
-        $movies = Movie::where('actived', 1)->orderBy('created_at', 'DESC')->get();
+        // ambil request dari input pencarian
+        $namaMovie = $request->search_movie;
+        if ($namaMovie != "") {
+            // like mencari data yang sesuai dengan teks tertentu
+            // % didepan mencari kata bellakang
+            // % dibelakang mencari kata depan
+            $movies = Movie::where('title', 'LIKE', '%' . $namaMovie . '%')->where('actived', 1)->orderBy('created_at', 'DESC')->get();     
+        } else {
+            $movies = Movie::where('actived', 1)->orderBy('created_at', 'DESC')->get();
+        }
         return view('movies', compact('movies'));
     }
 
@@ -49,6 +59,12 @@ class MovieController extends Controller
     {
         Movie::where('id', $id)->update(['actived' => 1]);
         return redirect()->route('admin.movies.index')->with('success', 'Berhasil mengaktifkan film');
+    }
+
+    public function movieSchedule($movie_id)
+    {
+        $movies = Movie::where('id', $movie_id)->with(['schedules', 'schedules.cinema'])->first();
+        return view('schedule.detail', compact('movies'));
     }
 
     /**
@@ -183,17 +199,47 @@ class MovieController extends Controller
      */
     public function destroy($id)
     {
-        $movies = Movie::findOrFail($id);
-
-        // Hapus file poster dari storage (pakai disk public)
-        if ($movies->poster && Storage::disk('public')->exists($movies->poster)) {
-            Storage::disk('public')->delete($movies->poster);
+        $schedules = Schedule::where('movie_id', $id)->count();
+        if ($schedules) {
+            return redirect()->route('admin.movies.index')->with('error', 'Data tidak bisa dihapus karena masih memiliki jadwal');
         }
+
+        $movies = Movie::findOrFail($id);
 
         // Hapus record dari database
         $movies->delete();
 
         return redirect()->route('admin.movies.index')->with('success', 'Data dan poster berhasil dihapus.');
+    }
+
+        public function trash()
+    {
+        $movieTrash = Movie::onlyTrashed()->get();
+        return view('admin.movie.trash', compact('movieTrash'));
+    }
+
+    public function restore($id)
+    {
+        $movie = Movie::onlyTrashed()->find($id);
+        $movie->restore();
+        return redirect()->route('admin.movies.index')->with('success', 'Film Berhasil Dipulihkan');
+    }
+
+    public function deletePermanent($id)
+    {
+        $movie = Movie::onlyTrashed()->find($id);
+
+        // Hapus file poster dari storage (pakai disk public)
+        if ($movie && $movie->poster && Storage::disk('public')->exists($movie->poster)) {
+            Storage::disk('public')->delete($movie->poster);
+        }
+
+        if ($movie) {
+            $movie->forceDelete();
+            return redirect()->back()->with('success', 'Film Berhasil Dihapus Seutuhnya');
+        } else {
+            return redirect()->back()->with('error', 'Film tidak ditemukan di trash');
+        }
     }
 
     public function export()

@@ -3,7 +3,7 @@
 @section('content')
 <div class="w-75 d-block mx-auto my-5 p-4">
 <h5 class="text-center mb-3">Tambah Promo Bioskop</h5>
-    <form method="POST" action="{{ route('staffs.promos.store')}}">
+    <form method="POST" action="{{ route('admin.staffs.store')}}">
         @csrf
         <div class="mb-3">
             <label for="name" class="form-label">Nama</label>

@@ -3,16 +3,11 @@
 @section('content')
 <div class="container mt-5">
     <div class="d-flex justify-content-end">
-        <a href="{{ route('admin.cinemas.export') }}" class="btn btn-info me-2">Export Data</a>
-        <a href="{{ route('admin.cinemas.trash') }}" class="btn btn-secondary me-2">Recycle Bin</a>
-        <a href="{{ route('admin.cinemas.create') }}" class="btn btn-success">Tambah Data</a>
+        <a href="{{ route('admin.cinemas.index') }}" class="btn btn-success">Kembali</a>
     </div>
     <h5 class="mt-3">Data Bioskop</h5>
     @if (Session::get('success'))
     <div class="alert alert-success">{{ Session::get('success') }}</div>
-    @endif
-    @if (Session::get('error'))
-    <div class="alert alert-danger">{{ Session::get('error') }}</div>
     @endif
     <table class="table table-bordered">
         <tr>
@@ -21,7 +16,7 @@
             <th>Lokasi Bioskop</th>
             <th>Aksi</th>
         </tr>
-        @foreach ($cinemas as $index => $item)
+        @foreach ($cinemaTrash as $index => $item)
         <tr>
             <th>{{ $index+1 }}</th>
             <!-- name, location dari fillable model Cinema -->
@@ -29,18 +24,22 @@
             <th>{{ $item['location'] }}</th>
             <th>
                 <div class="d-flex">
-                    <a href="{{ route('admin.cinemas.edit', ['id' => $item['id']]) }}" class="btn btn-secondary me-2" >Edit</a>
+                    <form action="{{ route('admin.cinemas.restore', ['id' => $item['id']]) }}" method="POST">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="btn btn-success me-2">Pulihkan</button>
+                    </form>
                     <form action="{{ route('admin.cinemas.delete', ['id' => $item['id']]) }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger me-2">Hapus</button>
                     </form>
                 </div>
-
+            </th>
         </tr>
 
         @endforeach
     </table>
 </div>
 
-@endsection
+@endsection 

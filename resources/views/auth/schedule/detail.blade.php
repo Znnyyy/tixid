@@ -5,7 +5,7 @@
     <div class="w-75 d-block m-auto">
         <div class="d-flex">
             <div style="width: 150px; height: 200px;">
-                <img src="{{ asset('storage/' . $movies->poster) }}" alt="" class="w-100">
+                <img src="{{ asset('storage/' . $movies->poster ) }}" alt="" class="w-100">
             </div>
             <div class="ms-5 mt-4">
                 <h5 class="fw-bold">{{ $movies->title }}</h5>
@@ -61,10 +61,9 @@
                 </button>
 
                 <ul class="dropdown-menu">
-                    <li class="dropdown-item">Bogor</li>
-                    <li class="dropdown-item">Jakarta Selatan</li>
-                    <li class="dropdown-item">Jakarta Timur</li>
-                    <li class="dropdown-item">Depok</li>
+                    @foreach ( $movies->schedules as $schedule )
+                    <li class="dropdown-item">{{ $schedule['cinema']['name'] }}</li>
+                    @endforeach
                 </ul>
             </div>
 
@@ -80,31 +79,20 @@
         </div>
 
         <div class="mb-5">
+            @foreach ( $movies->schedules as $schedule )
+
             <div class="w-100 my-3">
-                <i class="fa-solid fa-building"></i><b class="ms-2">Lippo Plaza ekalokasari</b>
+                <i class="fa-solid fa-building"></i><b class="ms-2">{{ $schedule['cinema']['name'] }}</b>
                 <br>
-                <small class="ms-3">Jl.Siliwangi no.123, Sukasari, Bogor timur, Bogor, Jawa Barat 16134. Lippo Plaza ekalokasari Bogor</small>
+                <small class="ms-3">{{ $schedule['cinema']['location'] }}</small>
                 <div class="d-flex gap-3 ps-3 my-2">
-                    <div class="btn btn-outline-secondary">11.00</div>
-                    <div class="btn btn-outline-secondary">12.00</div>
-                    <div class="btn btn-outline-secondary">13.00</div>
-                    <div class="btn btn-outline-secondary">14.00</div>
-                    <div class="btn btn-outline-secondary">15.00</div>
+                    @foreach ( $schedule['hour'] as $hour )
+                    <div class="btn btn-outline-secondary">{{ $hour }}</div>
+                    @endforeach
                 </div>
             </div>
             <hr>
-            <div class="w-100 my-3">
-                <i class="fa-solid fa-building"></i><b class="ms-2">Ramayana Tajur</b>
-                <br>
-                <small class="ms-3">Jl. Raya Tajur, Pakuan, RT04/04, RT.04/RW.04, Muarasari, Kec. Bogor Sel., Kota Bogor, Jawa Barat 16134</small>
-                <div class="d-flex gap-3 ps-3 my-2">
-                    <div class="btn btn-outline-secondary">11.00</div>
-                    <div class="btn btn-outline-secondary">12.00</div>
-                    <div class="btn btn-outline-secondary">13.00</div>
-                    <div class="btn btn-outline-secondary">14.00</div>
-                    <div class="btn btn-outline-secondary">15.00</div>
-                </div>
-            </div>
+            @endforeach
             <div class="w-100 p-2 bg-light text-center fixed-bottom">
                 <a href="/">
                     <i class="fa-solid fa-ticket m-2"> BELI TIKET</i>
