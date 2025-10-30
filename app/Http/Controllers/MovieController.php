@@ -61,9 +61,29 @@ class MovieController extends Controller
         return redirect()->route('admin.movies.index')->with('success', 'Berhasil mengaktifkan film');
     }
 
-    public function movieSchedule($movie_id)
+    public function movieSchedule($movie_id, Request $request)
     {
-        $movies = Movie::where('id', $movie_id)->with(['schedules', 'schedules.cinema'])->first();
+        $sortPrice = $request->sort_price;
+        if ($sortPrice) {
+            $movies = Movie::where('id', $movie_id)->with(['schedules' => function($q) 
+            use ($sortPrice) {
+                $q->orderBy('price', $sortPrice);
+            }, 'schedules.cinema'])->first();
+        } else {
+            $movies = Movie::where('id', $movie_id)->with(['schedules', 'schedules.cinema'])->first();
+        }
+
+        $sortAlfabet = $request->sort_alfabet;
+        if ($sortAlfabet == 'ASC') {
+            // sort_alfabet akan mengurutkan data berdasarkan name yg ada di cinema
+            $movies->schedules = $movies->schedules->sortBy(function ($schedule) {
+                return $schedule->cinema->name;
+            })->values();
+        } elseif ($sortAlfabet == 'DESC') {
+            $movies->schedules = $movies->schedules->sortByDesc(function ($schedule) {
+                return $schedule->cinema->name;
+            })->values();
+        }
         return view('schedule.detail', compact('movies'));
     }
 

@@ -66,14 +66,33 @@
                     @endforeach
                 </ul>
             </div>
+            @php
+            // request()->get('name_query') : memanggil query params (?) di url
+            // jika ? nilainya ASC ubah jadi DESC
+            if (request()->get('sort_price') == 'ASC') {
+            $sort_price = 'DESC';
+            } elseif (request()->get('sort_price') == 'DESC') {
+            $sort_price = 'ASC';
+            } else {
+            $sort_price = 'ASC';
+            }
+
+            if (request()->get('sort_alfabet') == 'ASC') {
+            $sort_alfabet = 'DESC';
+            } elseif (request()->get('sort_alfabet') == 'DESC') {
+            $sort_alfabet = 'ASC';
+            } else {
+            $sort_alfabet = 'ASC';
+            }
+            @endphp
 
             <div class="dropdown">
                 <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-mdb-dropdown-init data-mdb-ripple-init aria-expanded="false">
                     Sortir
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li class="dropdown-item">Alpabet</li>
-                    <li class="dropdown-item">Harga</li>
+                    <li><a class="dropdown-item" href="?sort_price={{ $sort_price }}">Harga</a></li>
+                    <li><a class="dropdown-item" href="?sort_alfabet={{ $sort_alfabet }}">Alfabet</a></li>
                 </ul>
             </div>
         </div>
@@ -82,9 +101,18 @@
             @foreach ( $movies->schedules as $schedule )
 
             <div class="w-100 my-3">
-                <i class="fa-solid fa-building"></i><b class="ms-2">{{ $schedule['cinema']['name'] }}</b>
-                <br>
-                <small class="ms-3">{{ $schedule['cinema']['location'] }}</small>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <i class="fa-solid fa-building"></i><b class="ms-2">{{ $schedule['cinema']['name'] }}</b>
+                        <br>
+                        <small class="ms-3">{{ $schedule['cinema']['location'] }}</small>
+                    </div>
+
+                    <div>
+                        <b class="text">Rp. {{ number_format($schedule['price'], 0, ',', '.') }}</b>
+                    </div>
+                </div>
+
                 <div class="d-flex gap-3 ps-3 my-2">
                     @foreach ( $schedule['hour'] as $hour )
                     <div class="btn btn-outline-secondary">{{ $hour }}</div>
