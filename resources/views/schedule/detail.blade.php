@@ -1,134 +1,178 @@
 @extends('templates.app')
 
 @section('content')
-<div class="container pt-5">
-    <div class="w-75 d-block m-auto">
-        <div class="d-flex">
-            <div style="width: 150px; height: 200px;">
-                <img src="{{ asset('storage/' . $movies->poster ) }}" alt="" class="w-100">
-            </div>
-            <div class="ms-5 mt-4">
-                <h5 class="fw-bold">{{ $movies->title }}</h5>
-                <table>
-                    <tr>
-                        <td><b class="text-secondary">Genre</b></td>
-                        <td class="px-3"></td>
-                        <td>{{ $movies->genre }}</td>
-                    </tr>
-                    <tr>
-                        <td><b class="text-secondary">Durasi</b></td>
-                        <td class="px-3"></td>
-                        <td>{{ $movies->duration }}</td>
-                    </tr>
-                    <tr>
-                        <td><b class="text-secondary">Sutradara</b></td>
-                        <td class="px-3"></td>
-                        <td>{{ $movies->director }}</td>
-                    </tr>
-                    <tr>
-                        <td><b class="text-secondary">Rating usia</b></td>
-                        <td class="px-3"></td>
-                        <td><span class="badge badge-danger">{{ $movies->age_rating }}+</span></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <div class="w-100 mt-5 d-flex justify-content-center">
-            <div class="col-6 pe-5 d-flex flex-column align-items-end">
-                <div class="d-flex flex-coloumn justify-content-end align-items-end">
-                    <h3 class="text-warning me-2">7.3</h3>
-                    <i class="fas fa-star text-warning mb-3"></i>
-                    <i class="fas fa-star text-warning mb-3"></i>
-                    <i class="fas fa-star text-warning mb-3"></i>
-                    <i class="fas fa-star text-secondary mb-3"></i>
-                    <i class="fas fa-star text-secondary mb-3"></i>
+    <div class="container pt-5">
+        <div class="w-75 d-block m-auto">
+            <div class="d-flex">
+                <div style="width: 150px; height: 200px;">
+                    <img src="{{ asset('storage/' . $movies->poster) }}" alt="" class="w-100">
                 </div>
-                <small>5.515 Vote</small>
-            </div>
-            <div class="col-6 ps-5 d-flex flex-column align-items-start" style="border-left: 1px solid #ccc;">
-                <div class="d-flex align-items-center">
-                    <div class="fas fa-heart text-danger me-2 "></div>
-                    <b>Masukan watchlist</b>
+                <div class="ms-5 mt-4">
+                    <h5 class="fw-bold">{{ $movies->title }}</h5>
+                    <table>
+                        <tr>
+                            <td><b class="text-secondary">Genre</b></td>
+                            <td class="px-3"></td>
+                            <td>{{ $movies->genre }}</td>
+                        </tr>
+                        <tr>
+                            <td><b class="text-secondary">Durasi</b></td>
+                            <td class="px-3"></td>
+                            <td>{{ $movies->duration }}</td>
+                        </tr>
+                        <tr>
+                            <td><b class="text-secondary">Sutradara</b></td>
+                            <td class="px-3"></td>
+                            <td>{{ $movies->director }}</td>
+                        </tr>
+                        <tr>
+                            <td><b class="text-secondary">Rating usia</b></td>
+                            <td class="px-3"></td>
+                            <td><span class="badge badge-danger">{{ $movies->age_rating }}+</span></td>
+                        </tr>
+                    </table>
                 </div>
-                <small class="mt-3">10.000 Orang</small>
             </div>
-        </div>
-        <div class="d-flex w-100 bg-light mt-3">
-            <div class="dropdown">
-                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-mdb-dropdown-init data-mdb-ripple-init aria-expanded="false">
-                    Bioskop
-                </button>
 
-                <ul class="dropdown-menu">
-                    @foreach ( $movies->schedules as $schedule )
-                    <li class="dropdown-item">{{ $schedule['cinema']['name'] }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @php
-            // request()->get('name_query') : memanggil query params (?) di url
-            // jika ? nilainya ASC ubah jadi DESC
-            if (request()->get('sort_price') == 'ASC') {
-            $sort_price = 'DESC';
-            } elseif (request()->get('sort_price') == 'DESC') {
-            $sort_price = 'ASC';
-            } else {
-            $sort_price = 'ASC';
-            }
-
-            if (request()->get('sort_alfabet') == 'ASC') {
-            $sort_alfabet = 'DESC';
-            } elseif (request()->get('sort_alfabet') == 'DESC') {
-            $sort_alfabet = 'ASC';
-            } else {
-            $sort_alfabet = 'ASC';
-            }
-            @endphp
-
-            <div class="dropdown">
-                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-mdb-dropdown-init data-mdb-ripple-init aria-expanded="false">
-                    Sortir
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="?sort_price={{ $sort_price }}">Harga</a></li>
-                    <li><a class="dropdown-item" href="?sort_alfabet={{ $sort_alfabet }}">Alfabet</a></li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="mb-5">
-            @foreach ( $movies->schedules as $schedule )
-
-            <div class="w-100 my-3">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <i class="fa-solid fa-building"></i><b class="ms-2">{{ $schedule['cinema']['name'] }}</b>
-                        <br>
-                        <small class="ms-3">{{ $schedule['cinema']['location'] }}</small>
+            <div class="w-100 mt-5 d-flex justify-content-center">
+                <div class="col-6 pe-5 d-flex flex-column align-items-end">
+                    <div class="d-flex flex-coloumn justify-content-end align-items-end">
+                        <h3 class="text-warning me-2">7.3</h3>
+                        <i class="fas fa-star text-warning mb-3"></i>
+                        <i class="fas fa-star text-warning mb-3"></i>
+                        <i class="fas fa-star text-warning mb-3"></i>
+                        <i class="fas fa-star text-secondary mb-3"></i>
+                        <i class="fas fa-star text-secondary mb-3"></i>
                     </div>
-
-                    <div>
-                        <b class="text">Rp. {{ number_format($schedule['price'], 0, ',', '.') }}</b>
-                    </div>
+                    <small>5.515 Vote</small>
                 </div>
-
-                <div class="d-flex gap-3 ps-3 my-2">
-                    @foreach ( $schedule['hour'] as $hour )
-                    <div class="btn btn-outline-secondary">{{ $hour }}</div>
-                    @endforeach
+                <div class="col-6 ps-5 d-flex flex-column align-items-start" style="border-left: 1px solid #ccc;">
+                    <div class="d-flex align-items-center">
+                        <div class="fas fa-heart text-danger me-2 "></div>
+                        <b>Masukan watchlist</b>
+                    </div>
+                    <small class="mt-3">10.000 Orang</small>
                 </div>
             </div>
-            <hr>
-            @endforeach
-            <div class="w-100 p-2 bg-light text-center fixed-bottom">
-                <a href="/">
-                    <i class="fa-solid fa-ticket m-2"> BELI TIKET</i>
-                </a>
+            <div class="d-flex w-100 bg-light mt-3">
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-mdb-dropdown-init data-mdb-ripple-init aria-expanded="false">
+                        Bioskop
+                    </button>
+
+                    <ul class="dropdown-menu">
+                        @foreach ($movies->schedules as $schedule)
+                            <li class="dropdown-item">{{ $schedule['cinema']['name'] }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @php
+                    // request()->get('name_query') : memanggil query params (?) di url
+                    // jika ? nilainya ASC ubah jadi DESC
+                    if (request()->get('sort_price') == 'ASC') {
+                        $sort_price = 'DESC';
+                    } elseif (request()->get('sort_price') == 'DESC') {
+                        $sort_price = 'ASC';
+                    } else {
+                        $sort_price = 'ASC';
+                    }
+
+                    if (request()->get('sort_alfabet') == 'ASC') {
+                        $sort_alfabet = 'DESC';
+                    } elseif (request()->get('sort_alfabet') == 'DESC') {
+                        $sort_alfabet = 'ASC';
+                    } else {
+                        $sort_alfabet = 'ASC';
+                    }
+                @endphp
+
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-mdb-dropdown-init data-mdb-ripple-init aria-expanded="false">
+                        Sortir
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="?sort_price={{ $sort_price }}">Harga</a></li>
+                        <li><a class="dropdown-item" href="?sort_alfabet={{ $sort_alfabet }}">Alfabet</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                @foreach ($movies->schedules as $schedule)
+
+                    <div class="w-100 my-3">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <i class="fa-solid fa-building"></i><b class="ms-2">{{ $schedule['cinema']['name'] }}</b>
+                                <br>
+                                <small class="ms-3">{{ $schedule['cinema']['location'] }}</small>
+                            </div>
+
+                            <div>
+                                <b class="text">Rp. {{ number_format($schedule['price'], 0, ',', '.') }}</b>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3 ps-3 my-2">
+                            <!-- karena berbentuk arry, sehingga gunakan loop untuk akses item nya -->
+                            @foreach ($schedule['hour'] as $index => $hour)
+                                <!-- 
+                                1. schedule-?id mengambil detail schedule yang akan dibeli
+                                2. $index mengambil index dari arry hours untuk mnegtahui jam berapa tiket akan dipesan
+                                3. this mengambil element html yang diklik secara penuh untuk diakses js
+                                 -->
+                                <div class="btn btn-outline-secondary" style="cursor:pointer;"
+                                    onclick="selectedHour('{{ $schedule->id }}', '{{ $index }}', this)">{{ $hour }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                    <hr>
+                @endforeach
+                <div class="w-100 p-2 bg-light text-center fixed-bottom" id="wrapBtn">
+                    <!-- javscripst void nonaktifkan href -->
+                    <a href="javascript:void(0)" id="btnOrder"><i class="fa-solid fa-ticket"></i> BELI TIKET</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 @endsection
+
+@push('script')
+<script>
+    let selectedScheduleId = null
+    let selectedHourIndex = null
+    let lastClicked = null
+
+    function selectedHour(scheduleId, hourIndex, el) {
+        selectedScheduleId = scheduleId
+        selectedHourIndex = hourIndex
+
+        if (lastClicked) {
+            lastClicked.style.backgroundColor = ""
+            lastClicked.style.color = ""
+            lastClicked.style.borderColor = ""
+        }
+
+        el.style.backgroundColor = "#112646"
+        el.style.color = "white"
+        el.style.borderColor = "#112646"
+
+        lastClicked = el
+
+        let wrapBtn = document.querySelector("#wrapBtn")
+        wrapBtn.classList.remove("bg-light")
+        wrapBtn.style.backgroundColor = "#112646"
+
+        let url = "{{ route('schedules.show-seats', ['scheduleId' => ':scheduleId', 'hourId' => ':hourId']) }}"
+            .replace(':scheduleId', scheduleId)
+            .replace(':hourId', hourIndex)
+
+        let btnOrder = document.querySelector("#btnOrder")
+        btnOrder.href = url
+        btnOrder.style.color = 'white'
+    }
+</script>

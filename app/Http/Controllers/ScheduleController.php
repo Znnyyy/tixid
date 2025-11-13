@@ -158,4 +158,11 @@ class ScheduleController extends Controller
         $schedule->forceDelete();
         return redirect()->back()->with('success', 'Jadwal Berhasil Dihapus Seutuhnya');
     }
+
+    public function showSeats($scheduleId, $hourId)
+    {
+        $schedule = Schedule::where('id', $scheduleId)->with('cinema')->first();
+        $hour = $schedule['hour'][$hourId];
+        return view('schedule.show-seats', compact('schedule', 'hour'));
+    }
 }

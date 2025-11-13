@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\MovieExport;
 use App\Models\Schedule;
+use Yajra\DataTables\Facades\DataTables;
 
 class MovieController extends Controller
 {
@@ -19,6 +20,47 @@ class MovieController extends Controller
     {
         $movies = Movie::all();
         return view('admin.movie.index', compact('movies'));
+    }
+
+    public function datatables()
+    {
+        $movies = Movie::query();
+        // dataTables::of() mengambil data dari query movie, keseluruhan field
+        // addColumn menambahkan column yf bukan dari field movie (biasa digunakan button atau field yg nilainya akan diolah)
+        // addIndexColumn mengambil index data mulai dari 1
+        return DataTables::of($movies)
+        ->addIndexColumn()
+        ->addColumn('poster_img', function($movie) {
+            $url = asset('storage/' . $movie->poster);
+            return '<img src="' . $url . '"width="150">';
+        })
+        ->addColumn('actived_badge', function($movie) {
+            if ($movie->actived) {
+                return '<span class="badge badge-success">Aktif</span>';;
+            } else {
+                return '<span class="badge badge-danger">Non-Aktif</span>';
+            }
+        })
+        ->addColumn('action', function($movie) {
+            $btnDetail = '<button type="button" class="btn btn-secondary me-2" onclick=\'showModal(' . json_encode($movie) . ')\'>Detail</button>';
+            $btnEdit = '<a href="' . route('admin.movies.edit', $movie->id) . '" class="btn btn-primary me-2">Edit</a>';
+            $btnDelete = 
+            '<form action="' . route('admin.movies.delete', $movie->id) . '" method="POST">
+                       ' . @csrf_field() . @method_field('DELETE') . '
+                        <button type="submit" class="btn btn-danger me-2">Hapus</button>
+                    </form>';
+            $btnNonAktif = '';
+            if($movie->actived) {
+                $btnNonAktif = 
+                '<form action="' . route('admin.movies.deactivate', $movie->id) . '" method="POST">
+                        ' . @csrf_field() . @method_field('PUT') . '
+                        <button type="submit" class="btn btn-warning me-2">Nonaktif</button>
+                    </form>';
+            }
+
+            return '<div class="d-flex justify-content-center align-items-center gap-2">' . $btnDetail . $btnEdit . $btnDelete . $btnNonAktif . '</div>';
+        })->rawColumns(['poster_img', 'actived_badge', 'action'])->make(true);
+        // rawColumn mendaftarkan column yg baru dibuat pada addColumn
     }
 
     public function home()

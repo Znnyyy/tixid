@@ -4,10 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
-class isStaff
+class isUser
 {
     /**
      * Handle an incoming request.
@@ -16,9 +16,9 @@ class isStaff
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role == 'staff') {
+        if (Auth::check() && Auth::user()->role == 'user') {
             return $next($request);
         }
-        return redirect()->route('home');
+        return redirect()->route('login')->with('error', 'Silahkan Login!');;
     }
 }

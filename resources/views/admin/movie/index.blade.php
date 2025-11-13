@@ -14,7 +14,7 @@
     @if (Session::get('error'))
     <div class="alert alert-danger">{{ Session::get('error') }}</div>
     @endif
-    <table class="table table-bordered">
+    <table class="table table-bordered" id="moviesTable">
         <tr>
             <th>No.</th>
             <th>Poster</th>
@@ -22,7 +22,7 @@
             <th>Status Aktif</th>
             <th>Aksi</th>
         </tr>
-        @foreach ($movies as $index => $item)
+        <!-- @foreach ($movies as $index => $item)
         <tr class="align-middle">
             <th>{{ $index+1 }}</th>
             <th><img class="poster" src="{{ asset('storage/' . $item['poster']) }}" alt="" class="w-100"></th>
@@ -60,7 +60,7 @@
                 </div>
             </th>
         </tr>
-        @endforeach
+        @endforeach -->
     </table>
     <!-- Modal -->
     <div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -86,6 +86,26 @@
 {{-- mengisi stack --}}
 @push('script')
 <script>
+    $(function () {
+        $('#moviesTable').DataTable({
+            processing: true,
+            // data duntuk datatable diproses secara serverside 
+            serverSide: true,
+            // routing menuju fungsi yg memproses data untuk datatable
+            ajax: "{{ route('admin.movies.datatables') }}",
+            // urutkan cloumn (td) pastikan urutan sesuai th
+            // data: nama nama diambil dari rawColumn jika addColumn
+            columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+                {data: 'poster_img', name: 'poster_img', orderable: false, searchable: false},
+                {data: 'title', name: 'title', orderable: true, searchable: true},
+                {data: 'actived_badge', name: 'actived_badge', orderable: false, searchable: false},
+                {data: 'action', name: 'action', orderable: false, searchable: false},
+            ]
+
+        });
+    });
+
     function showModal(item) {
         // console.log(item)
         // pengambilan gambar di public

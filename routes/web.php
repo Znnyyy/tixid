@@ -17,7 +17,15 @@ Route::get('/movies/active', [MovieController::class, 'homeMovies'])->name('home
 
 Route::get('/schedule/detail/{movie_id}', [MovieController::class, 'movieSchedule'])->name('schedules.detail');
 
+Route::middleware('isUser')->group(function(){    
+    Route::get('/schedules/{scheduleId}/hours/{hourId}', [ScheduleController::class, 'showSeats'])->name('schedules.show-seats');
+});
+    
 Route::get('/auth/logout', [userController::class, 'logout'])->name('logout');
+
+// menu "bioskop" pada navbar user
+Route::get('/cinemas/list', [CinemaController::class, 'cinemaList'])->name('cinemas.list');
+Route::get('/cinemas/{cinema_id}/schedules', [CinemaController::class, 'cinemaSchedules'])->name('cinema.schedules');
 
 // unntuk halaman yang hanya bisa diakses admin
 Route::middleware('isAdmin')->prefix('/admin')->name('admin.')->group(function () {
@@ -72,6 +80,7 @@ Route::middleware('isAdmin')->prefix('/admin')->name('admin.')->group(function (
         Route::patch('/restore/{id}', [MovieController::class, 'restore'])->name('restore');
         Route::delete('/delete-permanent/{id}', [MovieController::class, 'deletePermanent'])->name('delete_permanent');
         Route::get('/export', [MovieController::class, 'export'])->name('export');
+        Route::get('/datatables', [MovieController::class, 'datatables'])->name('datatables');
     });
 });
 
