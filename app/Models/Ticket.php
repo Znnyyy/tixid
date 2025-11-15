@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Tiket extends Model
+class Ticket extends Model
 {
     use SoftDeletes;
 
@@ -13,7 +13,7 @@ class Tiket extends Model
 
     protected function casts() {
         return [
-            'rows_of_seats' => 'array'
+            'rows_of_seat' => 'array'
         ];
     }
 

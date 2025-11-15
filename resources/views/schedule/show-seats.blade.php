@@ -1,7 +1,7 @@
 @extends('templates.app')
 
 @section('content')
-    <div class="container card my-5 pt-4" style="margin-bottom: 10% !important;">
+    <div class="container card my-5" style="margin-bottom: 10% !important;">
         <div class="card-body">
             <b>{{ $schedule['cinema']['name'] }}</b>
             <br>
@@ -38,7 +38,7 @@
                         @if ($col == 7)
                             <div style="width: 50px;"></div>
                         @endif
-                        <div style="background: #112646; color:white; width :40px; height:35px; margin: 5px; border-radius: 5px; text-align:center; padding-top: 3px;"
+                        <div style="background: #112646; color:white; width :40px; height:35px; margin: 5px; border-radius: 5px; text-align:center; padding-bottom: 3px;"
                             onclick="selectSeat('{{ $schedule->price }}', '{{ $row }}', '{{ $col }}', this)">
                             <small><b>{{ $row }}-{{ $col }}</b></small>
                         </div>
@@ -113,20 +113,22 @@
     function createOrder() {
         let data = {
             user_id: $("#user_id").val(),
-            schedule: $("#schedule").val(),
-            rows_of_seats: seats,
+            schedule_id: $("#schedule_id").val(),
+            rows_of_seat: seats,
             quantity:  seats.length,
             total_price: totalPrice,
             tax: 4000 * seats.length,
-            hour: $("#hour").val()
+            hour: $("#hour_id").val(),
+            _token: "{{ csrf_token() }}"
         }
 
         $.ajax({
-            url: "",
+            url: "{{ route('tickets.store') }}",
             method: "POST",
             data: data,
             success: function(response) {
-                console.log(response)
+                let ticketId = response.data.id
+                window.location.href = `/tickets/${ticketId}/order`
             },
             error: function(message) {
                 alert('Gagal membuat data tiket!')

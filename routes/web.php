@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TiketController;
 use App\Http\Controllers\userController;
 use App\Http\Controllers\CinemaController;
 use App\Http\Controllers\MovieController;
@@ -19,6 +20,16 @@ Route::get('/schedule/detail/{movie_id}', [MovieController::class, 'movieSchedul
 
 Route::middleware('isUser')->group(function(){    
     Route::get('/schedules/{scheduleId}/hours/{hourId}', [ScheduleController::class, 'showSeats'])->name('schedules.show-seats');
+
+    Route::prefix('/tickets')->name('tickets.')->group(function() {
+        Route::post('/', [TiketController::class, 'store'])->name('store');
+        Route::get('/{ticketId}/order', [TiketController::class, 'orderPage'])->name('order');
+        Route::post('/qrcode', [TiketController::class, 'createQrcode'])->name('qrcode');
+        Route::get('/{ticketId}/payment', [TiketController::class, 'paymentPage'])->name('payment');
+        Route::patch('/{ticketId}/payment/status', [TiketController::class, 'updateStatusPayment'])->name('payment.status');
+        Route::get('/{ticketId}/payment/proof', [TiketController::class, 'proofPayment'])->name('paymentProof');
+        Route::get('/{ticketId}/pdf', [TiketController::class, 'exportPdf'])->name('export_pdf');
+    });
 });
     
 Route::get('/auth/logout', [userController::class, 'logout'])->name('logout');
